@@ -57,11 +57,14 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         
         let address = "\(country), \(state), \(city)"
         
+        /*
         // Geocode Address String
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             // Process Response
             self.processResponse(withPlacemarks: placemarks, error: error)
-        }
+        }*/
+        cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
+        cityLabel.stringValue = "\u{f029}"
         
     }
     
