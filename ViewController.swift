@@ -19,6 +19,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     
     @IBAction func updateWeather(_ sender: Any) {
+        /*
         var currentLocation: CLLocation!
         currentLocation = locationManager.location
         
@@ -27,6 +28,11 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         print(text2)
         print(text1)
         print("got location")
+        */
+        
+        print("ay")
+        retrieveData(cityId: "4887398")
+        print("lmao")
 
     }
     
@@ -57,12 +63,12 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         
         let address = "\(country), \(state), \(city)"
         
-        /*
+        
         // Geocode Address String
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             // Process Response
             self.processResponse(withPlacemarks: placemarks, error: error)
-        }*/
+        }
         cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
         cityLabel.stringValue = "\u{f029}"
         
@@ -93,9 +99,35 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
                 cityLabel.stringValue = "No Matching Location Found"
             }
         }
+        
     }
     
+    func retrieveData(cityId: String){
+        let urlString = "http://api.openweathermap.org/data/2.5/forecast?id=4887398&APPID=5b9d4a06a07a8a29f234cb9dd91cb2c4"
+        
+        
 
+        print("trying")
+        if let url = URL(string: urlString) {
+            print("1st layer")
+            print(url)
+            
+            
+            if let data = try? Data(contentsOf: url) {
+                print("inside")
+                let json = JSON(data: data)
+                print("jsonData:\(json)")
+                
+            }
+            
+            print("done")
+            
+        }
+        
+        
+    }
+
+    
     /*
     override func viewDidLoad() {
         super.viewDidLoad()
