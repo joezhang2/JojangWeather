@@ -84,19 +84,7 @@ class WeatherForecast: NSObject {
     }*/
     /*
     func lookUpCity(){
-        /*
-        var jsonData: Data?
         
-        if let file = Bundle.main.path(forResource: "city.list.us", ofType: "json") {
-            jsonData = try? Data(contentsOf: URL(fileURLWithPath: file))
-        } else {
-            print("Fail")
-        }
-        let jsonString = String(data: jsonData!, encoding: .utf8)
-        let dataFromString = jsonString?.data(using: .utf8)
-        let json3 = JSON(data: dataFromString!)
-        print("jsonData:\(json3)")
-        */
         //let location: CLLocation! = getLocation()
         let text1: String = "\(location.coordinate.longitude)"
         let text2: String = "\(location.coordinate.latitude)"

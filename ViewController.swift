@@ -10,38 +10,21 @@ import Cocoa
 import CoreLocation
 
 class ViewController: NSViewController, CLLocationManagerDelegate {
+    let country:String = "USA"
+    var requestLocationServicesAlert: NSAlert!
+    lazy var geocoder = CLGeocoder()
+    var locationManager = CLLocationManager()
+    var city: CurrentCity!
+    var cityFound = false
     
     @IBOutlet weak var cityTextField: NSTextField!
     
     @IBOutlet weak var cityLabel: NSTextField!
     
-    lazy var geocoder = CLGeocoder()
-    let locationManager = CLLocationManager()
-    
-    @IBAction func updateWeather(_ sender: Any) {
-        /*
-        var currentLocation: CLLocation!
-        currentLocation = locationManager.location
-        
-        let text1: String = "\(currentLocation.coordinate.longitude)"
-        let text2: String = "\(currentLocation.coordinate.latitude)"
-        print(text2)
-        print(text1)
-        print("got location")
-        */
-        
-        print("ay")
-        retrieveData(cityId: "4887398")
-        print("lmao")
-
-    }
-    
-    @IBAction func autoSetLocation(_ sender: Any) {
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        city = CurrentCity(longitude: 0, latitude: 0, cityName: "ha")
         if (CLLocationManager.locationServicesEnabled()){
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -50,6 +33,49 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
         }
     }
+
+    
+    @IBAction func updateWeather(_ sender: Any) {
+        print("ay")
+        retrieveData(cityId: "4887398")
+        print("lmao")
+    }
+    
+    
+    // Tries to use location services to retrieve the latitue and longitude of the current position
+    @IBAction func autoSetLocation(_ sender: Any) {
+        var currentLocation: CLLocation!
+        
+        // Check if user granted allowed access
+        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorized){
+            
+            // Update get user's location
+            locationManager.startUpdatingLocation()
+            locationManager.stopUpdatingLocation()
+            currentLocation = locationManager.location
+            
+            city = CurrentCity(longitude: currentLocation.coordinate.longitude, latitude: currentLocation.coordinate.latitude, cityName: "Chicago")
+            var cityId: String!
+            
+            do{
+                try cityId = city.lookUpCityId()
+            }catch CityNotFound.cityNotInList {
+                print("not found")
+            }catch {
+                print("other")
+            }
+            
+            print(cityId)
+        }
+            
+        else{
+            requestLocationServicesAlert = NSAlert()
+            requestLocationServicesAlert.messageText = "Need location services"
+            requestLocationServicesAlert.informativeText = "Please enable location services so the current location can be automatically looked up."
+            requestLocationServicesAlert.runModal()
+        }
+        
+    }
     
     
     @IBAction func handleCity(_ sender: AnyObject) {
@@ -57,7 +83,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         
         let locationData = cityTextField.stringValue.components(separatedBy: ",")
         
-        let country:String = "USA"
+        
         let city: String = locationData[0]
         let state: String = locationData[1]
         
@@ -80,8 +106,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         //geocodeButton.isHidden = false
         //activityIndicatorView.stopAnimating()
         
-        if let error = error {
-            print("Unable to Forward Geocode Address (\(error))")
+        if (error != nil) {
+            //print("Unable to Forward Geocode Address (\(error))")
             cityLabel.stringValue = "Unable to Find Location for Address"
             
         } else {
@@ -105,8 +131,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
     func retrieveData(cityId: String){
         let urlString = "http://api.openweathermap.org/data/2.5/forecast?id=4887398&APPID=5b9d4a06a07a8a29f234cb9dd91cb2c4"
         
-        
-
+    
         print("trying")
         if let url = URL(string: urlString) {
             print("1st layer")
@@ -121,10 +146,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
             }
             
             print("done")
-            
         }
-        
-        
     }
 
     
