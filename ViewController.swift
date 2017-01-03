@@ -9,20 +9,33 @@
 import Cocoa
 import CoreLocation
 
-class ViewController: NSViewController, CLLocationManagerDelegate {
-    let country:String = "USA"
+class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDelegate, NSTableViewDataSource{
     var requestLocationServicesAlert = NSAlert()
     lazy var geocoder = CLGeocoder()
     var locationManager = CLLocationManager()
+    
+    let country = "USA"
+    let numberOfRows = 2
+    
     var currentLocation: CLLocation!
     var cityFound = false
+    var semaphore = DispatchSemaphore(value: 1)
+    
     
     @IBOutlet weak var cityTextField: NSTextField!
-    
     @IBOutlet weak var cityLabel: NSTextField!
+    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var dataTable: NSScrollView!
+    @IBOutlet weak var headerView: NSTableHeaderView!
+    
+    
+    var objects: NSMutableArray! = NSMutableArray()
+    var objects2: NSMutableArray! = NSMutableArray()
+    var objects3 = ["alpha", "beta", "gamma", "delta", "epsilon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if (CLLocationManager.locationServicesEnabled()){
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -30,18 +43,62 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
             locationManager.stopUpdatingLocation()
         }
+        userSetLocation(self)
+        
+        self.objects.add("one")
+        self.objects.add("two")
+        
+        self.objects2.add("1")
+        self.objects2.add("2")
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        for (tableColumn, text) in zip(tableView.tableColumns, objects3) {
+            tableColumn.title = text
+            
+        }
+
+        tableView.allowsColumnSelection = false
+        tableView.selectionHighlightStyle = NSTableViewSelectionHighlightStyle.none
+        //self.tableView.reloadData()
     }
 
-    @IBAction func updateWeather(_ sender: Any) {
-        print("ay")
+    @IBAction func updateDailyForecast(_ sender: Any) {
+        semaphore.wait()
+        if !cityFound{
+            let title = "Missing location data"
+            let message = "Please enter a location or automatically get the location"
+            displayErrorMessage(title: title, message: message)
+        }
+        else{
+            print("ay daily")
+            
+            print("lmao")
+        }
+        semaphore.signal()
+    }
+    
+    @IBAction func updateHourlyForecast(_ sender: Any) {
+        semaphore.wait()
+        if !cityFound{
+            let title = "Missing location data"
+            let message = "Please enter a location or automatically get the location"
+            displayErrorMessage(title: title, message: message)
+        }
+        else{
+            print("ay hourly")
         
-        print("lmao")
+            print("lmao")
+        }
+        semaphore.signal()
     }
     
     
     // Tries to use location services to retrieve the latitue and longitude of the current position
     @IBAction func autoSetLocation(_ sender: Any) {
         // Check if user granted allowed access
+        semaphore.wait()
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorized){
             // Update get user's location
             locationManager.startUpdatingLocation()
@@ -56,6 +113,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
             let message = "Please enable location services so the current location can be automatically looked up."
             displayErrorMessage(title: title, message: message)
         }
+        semaphore.signal()
     }
     
     
@@ -88,9 +146,9 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         requestLocationServicesAlert.runModal()
     }
     
-    @IBAction func handleCity(_ sender: AnyObject) {
-        //cityLabel.stringValue = cityTextField.stringValue
-        
+    @IBAction func userSetLocation(_ sender: AnyObject) {
+        semaphore.wait()
+        cityLabel.stringValue = cityTextField.stringValue
         let locationData = cityTextField.stringValue.components(separatedBy: ",")
         
         if locationData.count != 2{
@@ -111,6 +169,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
             print(self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude)
         }
         
+        semaphore.signal()
         //
         //cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
         //cityLabel.stringValue = "\u{f029}"
@@ -136,9 +195,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
                 displayErrorMessage(title: title, message: message)
             }*/
             if let location = placemarks?[0].location {
-                let coordinate = location.coordinate
                 currentLocation = location
-                cityLabel.stringValue = "\(coordinate.latitude), \(coordinate.longitude)"
                 cityFound = true
                 
             } else {
@@ -151,24 +208,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
     }
     
     func retrieveData(){
-        let urlString = "http://api.openweathermap.org/data/2.5/forecast?id=4887398&APPID=5b9d4a06a07a8a29f234cb9dd91cb2c4"
-        
     
-        print("trying")
-        if let url = URL(string: urlString) {
-            print("1st layer")
-            print(url)
-            
-            
-            if let data = try? Data(contentsOf: url) {
-                print("inside")
-                let json = JSON(data: data)
-                print("jsonData:\(json)")
-                
-            }
-            
-            print("done")
-        }
     }
 
     
@@ -185,5 +225,26 @@ class ViewController: NSViewController, CLLocationManagerDelegate {
         }
     }
     
+    
+    func numberOfRows(in tableView: NSTableView) -> Int
+    {
+        print(self.objects.count)
+        return self.objects.count
+    }
+    
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
+    {
+        var text = self.objects.object(at: row)
+        
+        if tableColumn == tableView.tableColumns[0] {
+            text = self.objects.object(at: row)
+            
+        } else {
+            text = self.objects2.object(at: row)
+        }
+        return text
+    }
 }
+
+
 

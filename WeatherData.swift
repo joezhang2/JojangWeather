@@ -10,7 +10,8 @@ import Cocoa
 import CoreLocation
 
 
-let owmKey: String = "5b9d4a06a07a8a29f234cb9dd91cb2c4"
+let owmKey = "5b9d4a06a07a8a29f234cb9dd91cb2c4"
+let baseUrl = "http://api.openweathermap.org/data/2.5/forecast"
 
 struct Weather {
     var weatherCondition: String
@@ -24,8 +25,12 @@ struct Weather {
 
 struct Forecast {
     var fiveDayForecast: [Weather]
+    var curLocation: CLLocation
+    var cityName: String
     
-    init() {
+    init(curLocation: CLLocation, cityName: String) {
+        self.curLocation = curLocation
+        self.cityName = cityName        
         fiveDayForecast = [Weather](repeating: Weather(weatherCondition: "Null", temperature: 0.0), count: 5 )
     }
     
@@ -38,59 +43,26 @@ struct Forecast {
         }
     }
     
-}
-
-
-class WeatherForecast: NSObject {
-    var curData = Forecast()
-    lazy var geocoder = CLGeocoder()
-    
-    override init(){
+    func retrieveData(daily:Bool = false){
+        let urlString = "?id=4887398&APPID=5b9d4a06a07a8a29f234cb9dd91cb2c4"
         
+        print("trying")
+        if let url = URL(string: urlString) {
+            print("1st layer")
+            print(url)
+            
+            
+            if let data = try? Data(contentsOf: url) {
+                print("inside")
+                let json = JSON(data: data)
+                print("jsonData:\(json)")
+                
+            }
+            
+            print("done")
+        }
+
     }
-    
-
-    /*
-    func getLocation() -> CLLocation{
-        
-        let locationManager = CLLocationManager()
-        var currentLocation: CLLocation!
-        
-        let authStatus: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
-        
-        if authStatus == CLAuthorizationStatus.restricted || authStatus == CLAuthorizationStatus.denied {
-            print("Sorry, location is not permited, you need to enable it in System Preferences")
-            exit(1)
-        }
-        
-        if CLLocationManager.locationServicesEnabled() != true {
-            print("Sorry, location not supported")
-            exit(2)
-        }
-        locationManager.startUpdatingLocation()
-        
-        currentLocation = locationManager.location
-        
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locationManager.stopUpdatingLocation()
-        
-        let text1: String = "\(currentLocation.coordinate.longitude)"
-        let text2: String = "\(currentLocation.coordinate.latitude)"
-        print(text1)
-        print(text2)
-        return currentLocation
-        
-    }*/
-    /*
-    func lookUpCity(){
-        
-        //let location: CLLocation! = getLocation()
-        let text1: String = "\(location.coordinate.longitude)"
-        let text2: String = "\(location.coordinate.latitude)"
-        print(text1)
-        print(text2)
-        
-    }*/
 }
+
 
