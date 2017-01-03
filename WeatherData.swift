@@ -16,30 +16,30 @@ let baseUrl = "http://api.openweathermap.org/data/2.5/forecast"
 struct Weather {
     var weatherCondition: String
     var temperature: Double
+    var time: String
     
-    init(weatherCondition: String, temperature: Double){
+    init(weatherCondition: String, temperature: Double, time: String){
         self.weatherCondition = weatherCondition
         self.temperature = temperature
+        self.time = time
     }
 }
 
 struct Forecast {
-    var fiveDayForecast: [Weather]
-    var curLocation: CLLocation
-    var cityName: String
+    var fiveTimeUnitsForecast: [Weather]
+    var curLocation: CLLocation!
+    var cityName: String!
     
-    init(curLocation: CLLocation, cityName: String) {
-        self.curLocation = curLocation
-        self.cityName = cityName        
-        fiveDayForecast = [Weather](repeating: Weather(weatherCondition: "Null", temperature: 0.0), count: 5 )
+    init() {        
+        fiveTimeUnitsForecast = [Weather](repeating: Weather(weatherCondition: "Null", temperature: 0.0, time: "Null day"), count: 5 )
     }
     
-    mutating func setForecast(conditions: [String], temperature: [Double]) {
-        fiveDayForecast.removeAll()
-        var day: Weather = Weather(weatherCondition: "null", temperature: 0.0)
-        for (cond, temp) in zip(conditions, temperature) {
-            day = Weather(weatherCondition: cond, temperature: temp)
-            fiveDayForecast.append(day)
+    mutating func setForecast(conditions: [String], temperature: [Double], timeUnits: [String]) {
+        fiveTimeUnitsForecast.removeAll()
+        var day: Weather = Weather(weatherCondition: "null", temperature: 0.0, time: "null")
+        for index in 0 ... fiveTimeUnitsForecast.count-1{
+            day = Weather(weatherCondition: conditions[index], temperature: temperature[index], time: timeUnits[index])
+            fiveTimeUnitsForecast.append(day)
         }
     }
     

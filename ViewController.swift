@@ -15,7 +15,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     var locationManager = CLLocationManager()
     
     let country = "USA"
-    let numberOfRows = 2
+    let numberRows = 2
     
     var currentLocation: CLLocation!
     var cityFound = false
@@ -28,10 +28,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     @IBOutlet weak var dataTable: NSScrollView!
     @IBOutlet weak var headerView: NSTableHeaderView!
     
-    
-    var objects: NSMutableArray! = NSMutableArray()
-    var objects2: NSMutableArray! = NSMutableArray()
-    var objects3 = ["alpha", "beta", "gamma", "delta", "epsilon"]
+    var forecastData = Forecast()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,18 +43,11 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         }
         userSetLocation(self)
         
-        self.objects.add("one")
-        self.objects.add("two")
-        
-        self.objects2.add("1")
-        self.objects2.add("2")
-        
         tableView.delegate = self
         tableView.dataSource = self
         
-        for (tableColumn, text) in zip(tableView.tableColumns, objects3) {
-            tableColumn.title = text
-            
+        for (tableColumn, forecast) in zip(tableView.tableColumns, forecastData.fiveTimeUnitsForecast) {
+            tableColumn.title = forecast.time
         }
 
         tableView.allowsColumnSelection = false
@@ -228,19 +219,31 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     
     func numberOfRows(in tableView: NSTableView) -> Int
     {
-        print(self.objects.count)
-        return self.objects.count
+        
+        return numberRows
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
-        var text = self.objects.object(at: row)
+        /*var text = self.objects.object(at: row)
         
         if tableColumn == tableView.tableColumns[0] {
             text = self.objects.object(at: row)
             
         } else {
             text = self.objects2.object(at: row)
+        }*/
+        
+        var text = ""
+        for index in 0 ... tableView.tableColumns.count-1{
+            if tableColumn == tableView.tableColumns[index]{
+                if row == 0{
+                    text = "\(forecastData.fiveTimeUnitsForecast[index].temperature)"
+                }
+                else{
+                    text = forecastData.fiveTimeUnitsForecast[index].weatherCondition
+                }
+            }
         }
         return text
     }
