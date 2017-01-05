@@ -15,7 +15,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     var locationManager = CLLocationManager()
     
     let country = "USA"
-    let numberRows = 2
+    let numberRows = 3
     
     var currentLocation: CLLocation!
     var cityFound = false
@@ -46,15 +46,11 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         tableView.delegate = self
         tableView.dataSource = self
         
-        for (tableColumn, forecast) in zip(tableView.tableColumns, forecastData.fiveTimeUnitsForecast) {
-            tableColumn.title = forecast.time
-        }
-
         tableView.allowsColumnSelection = false
         tableView.selectionHighlightStyle = NSTableViewSelectionHighlightStyle.none
-        //self.tableView.reloadData()
+        self.tableView.reloadData()
     }
-
+    
     @IBAction func updateDailyForecast(_ sender: Any) {
         semaphore.wait()
         if !cityFound{
@@ -64,8 +60,16 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         }
         else{
             print("ay daily")
-            
+            do{
+                try forecastData.updateForecast(curLocation: currentLocation, cityName: cityLabel.stringValue.components(separatedBy: ",")[0], daily: true)
+            }
+            catch{
+                let title = "Error getting forecast"
+                let message = "Something went wrong :("
+                displayErrorMessage(title: title, message: message)
+            }
             print("lmao")
+            tableView.reloadData()
         }
         semaphore.signal()
     }
@@ -79,7 +83,14 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         }
         else{
             print("ay hourly")
-        
+            do{
+                try forecastData.updateForecast(curLocation: currentLocation, cityName: cityLabel.stringValue.components(separatedBy: ",")[0])
+            }
+            catch{
+                let title = "Error getting forecast"
+                let message = "Something went wrong :("
+                displayErrorMessage(title: title, message: message)
+            }
             print("lmao")
         }
         semaphore.signal()
@@ -176,15 +187,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             displayErrorMessage(title: title, message: message)
         }
         else {
-            /*if let placemarks = placemarks, placemarks.count > 0 {
-                currentLocation = placemarks[0].location
-                print(currentLocation.coordinate)
-            }
-            else {
-                let title = "No placemarks on map"
-                let message = "Need to pin a spot on map first"
-                displayErrorMessage(title: title, message: message)
-            }*/
             if let location = placemarks?[0].location {
                 currentLocation = location
                 cityFound = true
@@ -195,50 +197,23 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
                 displayErrorMessage(title: title, message: message)
             }
         }
-        
-    }
-    
-    func retrieveData(){
-    
     }
 
-    
-    /*
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }*/
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
-    
-    
     func numberOfRows(in tableView: NSTableView) -> Int
     {
-        
         return numberRows
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
-        /*var text = self.objects.object(at: row)
-        
-        if tableColumn == tableView.tableColumns[0] {
-            text = self.objects.object(at: row)
-            
-        } else {
-            text = self.objects2.object(at: row)
-        }*/
-        
         var text = ""
         for index in 0 ... tableView.tableColumns.count-1{
             if tableColumn == tableView.tableColumns[index]{
                 if row == 0{
-                    text = "\(forecastData.fiveTimeUnitsForecast[index].temperature)"
+                    text = forecastData.fiveTimeUnitsForecast[index].time
+                }
+                else if row == 1{
+                    text = forecastData.fiveTimeUnitsForecast[index].temperature
                 }
                 else{
                     text = forecastData.fiveTimeUnitsForecast[index].weatherCondition
@@ -248,6 +223,3 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         return text
     }
 }
-
-
-
