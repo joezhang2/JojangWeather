@@ -10,6 +10,7 @@ import Cocoa
 import CoreLocation
 
 class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDelegate, NSTableViewDataSource{
+    
     var requestLocationServicesAlert = NSAlert()
     lazy var geocoder = CLGeocoder()
     var locationManager = CLLocationManager()
@@ -27,6 +28,11 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var dataTable: NSScrollView!
     @IBOutlet weak var headerView: NSTableHeaderView!
+    
+    
+    @IBOutlet weak var unit1: NSTableColumn!
+    
+    
     
     var forecastData = Forecast()
 
@@ -170,12 +176,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             self.processResponse(withPlacemarks: placemarks, error: error)
             print(self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude)
         }
-        
+
         semaphore.signal()
-        //
-        //cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
-        //cityLabel.stringValue = "\u{f029}"
-        
     }
     
     
@@ -204,9 +206,10 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         return numberRows
     }
     
-    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
-    {
+   
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         var text = ""
+        
         for index in 0 ... tableView.tableColumns.count-1{
             if tableColumn == tableView.tableColumns[index]{
                 if row == 0{
@@ -216,10 +219,24 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
                     text = forecastData.fiveTimeUnitsForecast[index].temperature
                 }
                 else{
+                    //view.textField?.font = NSFont(name: "Weather Icons", size: 16)
+                    //view.textField?.stringValue = forecastData.fiveTimeUnitsForecast[index].weatherCondition
+                    //return view
+                    //cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
+                    //cityLabel.stringValue = "strong-wind" //"\u{f029}"
                     text = forecastData.fiveTimeUnitsForecast[index].weatherCondition
+
                 }
             }
         }
         return text
     }
+    
+    
+    override var representedObject: Any? {
+        didSet {
+            // Update the view, if already loaded.
+        }
+    }
+ 
 }

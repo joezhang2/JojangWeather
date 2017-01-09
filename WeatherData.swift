@@ -92,7 +92,6 @@ struct Forecast {
     }
     
     func parseDailyData(data: JSON) ->([String], [String], [String]){
-        print(data)
         var conditions = [String]()
         var temperature = [String]()
         var timeUnits = [String]()
@@ -106,7 +105,6 @@ struct Forecast {
             let myCalendar = Calendar(identifier: .gregorian)
             let weekDay = myCalendar.component(.weekday, from: date as Date)
             let dayOfweek: String
-            //print(date)
             
             switch weekDay {
             case 0:
@@ -127,10 +125,12 @@ struct Forecast {
             
             timeUnits.append(dayOfweek)
             
-            //print(data["list"][index]["dt"].int)
-            //print(data["list"][index]["temp"])
             temperature.append("\(data["list"][index]["temp"]["day"].double!)°")
-            conditions.append("day\(data["list"][index]["weather"][0]["id"].int)")
+            
+            let symbol = OpenWeatherMapIcon.convert(condition: (data["list"][index]["weather"][0]["id"].int!))
+            //print(data["list"][index]["weather"][0]["main"].string)
+            //print(symbol)
+            conditions.append(symbol)
         }
         
         return (conditions, temperature, timeUnits)
