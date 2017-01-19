@@ -61,20 +61,20 @@ struct Forecast {
             setForecast(conditions: cond, temperature: temp, timeUnits: time)
         }
         else{
-            
+            (cond, temp, time) = parseHourlyData(data: jsonData)
+            setForecast(conditions: cond, temperature: temp, timeUnits: time)
         }
     }
     
     func retrieveData(curLocation: CLLocation, cityName: String, daily:Bool = false)throws->JSON{
         var urlString: String
         var json: JSON!
-        //"?id=4887398&APPID=5b9d4a06a07a8a29f234cb9dd91cb2c4"
+        // Modify url to for the corresponding APIs
         if daily{
             urlString = owmBaseUrl + "/daily" + "?lat=\(curLocation.coordinate.latitude)&lon=\(curLocation.coordinate.longitude)&APPID=" + owmKey + "&units=imperial"
-            print(urlString)
         }
         else{
-            urlString = apixuBaseUrl + apixuKey + "&q=\(curLocation.coordinate.latitude),\(curLocation.coordinate.longitude)&days=1"
+            urlString = apixuBaseUrl + apixuKey + "&q=\(curLocation.coordinate.latitude),\(curLocation.coordinate.longitude)&days=2"
         }
         
         if let url = URL(string: urlString) {
@@ -135,9 +135,58 @@ struct Forecast {
         
         return (conditions, temperature, timeUnits)
     }
-    func convertToDayOfWeek(){
+    
+    func parseHourlyData(data: JSON) ->([String], [String], [String]){
+        var conditions = [String]()
+        var temperature = [String]()
+        var timeUnits = [String]()
+        let formatter  = DateFormatter()
+        formatter.amSymbol = "AM"
+        formatter.pmSymbol = "PM"
         
+        let hour = Calendar.current.component(.hour, from: Date())
+        var endingPoint = 0
+        
+        if(hour+numForecasts-1 <= 23){
+                endingPoint = hour + numForecasts-1
+        }
+        else{
+            endingPoint = 23
+        }
+        for index in hour ... endingPoint{
+            formatter.dateFormat = "yyyy-MM-dd HH:mm"
+            let date = formatter.date(from: data["forecast"]["forecastday"][0]["hour"][index]["time"].string!)
+            formatter.dateFormat = "hh:mm a"
+            timeUnits.append(formatter.string(from: date!))
+            temperature.append("\(data["forecast"]["forecastday"][0]["hour"][index]["temp_f"].double!)°")
+            let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][0]["hour"][index]["condition"]["code"].int!))
+            print(data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"])
+            print(symbol)
+            conditions.append(symbol)
+        }
+        
+        if(hour+numForecasts-1 > 23){
+            endingPoint = hour + numForecasts - 1 - 24
+            for index in 0 ... endingPoint{
+                print("time: ", index)
+                formatter.dateFormat = "yyyy-MM-dd HH:mm"
+                let date = formatter.date(from: data["forecast"]["forecastday"][1]["hour"][index]["time"].string!)
+                formatter.dateFormat = "hh:mm a"
+                timeUnits.append(formatter.string(from: date!))
+                temperature.append("\(data["forecast"]["forecastday"][1]["hour"][index]["temp_f"].double!)°")
+                let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"].int!))
+                print(data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"])
+                print(symbol)
+                
+                conditions.append(symbol)
+            }
+
+        }
+        
+        return (conditions, temperature, timeUnits)
     }
+    
+    
 }
 
 enum BadUrlError: Error {

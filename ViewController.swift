@@ -11,6 +11,9 @@ import CoreLocation
 
 class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDelegate, NSTableViewDataSource{
     
+    var statusBar = NSStatusBar.system()
+    var statusBarItem : NSStatusItem = NSStatusItem()
+    
     var requestLocationServicesAlert = NSAlert()
     lazy var geocoder = CLGeocoder()
     var locationManager = CLLocationManager()
@@ -32,10 +35,13 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     
     @IBOutlet weak var unit1: NSTableColumn!
     
-    
-    
     var forecastData = Forecast()
 
+    override func awakeFromNib() {
+        //Add statusBarItem
+        statusBarItem = statusBar.statusItem(withLength: -1)
+        statusBarItem.title = "n/a"
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +61,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         tableView.allowsColumnSelection = false
         tableView.selectionHighlightStyle = NSTableViewSelectionHighlightStyle.none
         self.tableView.reloadData()
+        
     }
     
     @IBAction func updateDailyForecast(_ sender: Any) {
@@ -98,8 +105,10 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
                 displayErrorMessage(title: title, message: message)
             }
             print("lmao")
+            tableView.reloadData()
         }
         semaphore.signal()
+        
     }
     
     
@@ -114,7 +123,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             currentLocation = locationManager.location
             
             lookUpCityAndState(location: currentLocation)
-            print(currentLocation.coordinate.longitude, currentLocation.coordinate.latitude)
+            //print(currentLocation.coordinate.longitude, currentLocation.coordinate.latitude)
         }
         else{
             let title = "Need location services"
@@ -135,6 +144,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             if let pm = placemarks{
                 let curLocation = pm[0]
                 self.cityLabel.stringValue = "\(curLocation.locality!), \(curLocation.administrativeArea!)"
+                // Update manaual set location field for clarity
+                self.cityTextField.stringValue = self.cityLabel.stringValue
                 self.cityFound = true
             }
             else {
@@ -238,5 +249,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             // Update the view, if already loaded.
         }
     }
- 
+    
+    
+    // Status bar
+    
 }

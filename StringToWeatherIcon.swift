@@ -9,7 +9,6 @@
 import Foundation
 
 struct OpenWeatherMapIcon {
-
     static func convert(condition: Int) ->String {
         let symbol: String
         let id = (condition/100)
@@ -86,126 +85,122 @@ struct OpenWeatherMapIcon {
                 symbol = "\u{f01e}"
             }
         default : symbol = "\u{f07b}"
-            
-        /*
-        case "day200": symbol = "\u{f010}"
-        case "day201": symbol = "\u{f010}"
-        case "day202": symbol = "\u{f010}"
-        case "day210": symbol = "\u{f005}"
-        case "day211": symbol = "\u{f005}"
-        case "day212": symbol = "\u{f005}"
-        case "day221": symbol = "\u{f005}"
-        case "day230": symbol = "\u{f010}"
-        case "day231": symbol = "\u{f010}"
-        case "day232": symbol = "\u{f010}"
-        case "day300": symbol = "\u{f00b}"
-        case "day301": symbol = "\u{f00b}"
-        case "day302": symbol = "\u{f008}"
-        case "day310": symbol = "\u{f008}"
-        case "day311": symbol = "\u{f008}"
-        case "day312": symbol = "\u{f008}"
-        case "day313": symbol = "\u{f008}"
-        case "day314": symbol = "\u{f008}"
-        case "day321": symbol = "\u{f00b}"
-        case "day500": symbol = "\u{f00b}"
-        case "day501": symbol = "\u{f008}"
-        case "day502": symbol = "\u{f008}"
-        case "day503": symbol = "\u{f008}"
-        case "day504": symbol = "\u{f008}"
-        case "day511": symbol = "\u{f006}"
-        case "day520": symbol = "\u{f009}"
-        case "day521": symbol = "\u{f009}"
-        case "day522": symbol = "\u{f009}"
-        case "day531": symbol = "\u{f00e}"
-        case "day600": symbol = "\u{f00a}"
-        case "day601": symbol = "\u{f0b2}"
-        case "day602": symbol = "\u{f00a}"
-        case "day611": symbol = "\u{f006}"
-        case "day612": symbol = "\u{f006}"
-        case "day615": symbol = "\u{f006}"
-        case "day616": symbol = "\u{f006}"
-        case "day620": symbol = "\u{f006}"
-        case "day621": symbol = "\u{f00a}"
-        case "day622": symbol = "\u{f00a}"
-        case "day701": symbol = "\u{f009}"
-        case "day711": symbol = "\u{f062}"
-        case "day721": symbol = "\u{f0b6}"
-        case "day731": symbol = "\u{f063}"
-        case "day741": symbol = "\u{f003}"
-        case "day761": symbol = "\u{f063}"
-        case "day762": symbol = "\u{f063}"
-        case "day781": symbol = "\u{f056}"
-        case "day800": symbol = "\u{f00d}"
-        case "day801": symbol = "\u{f000}"
-        case "day802": symbol = "\u{f000}"
-        case "day803": symbol = "\u{f000}"
-        case "day804": symbol = "\u{f00c}"
-        case "day900": symbol = "\u{f056}"
-        case "day902": symbol = "\u{f073}"
-        case "day903": symbol = "\u{f076}"
-        case "day904": symbol = "\u{f072}"
-        case "day906": symbol = "\u{f004}"
-        case "day957": symbol = "\u{f050}"
-            
-        case "night200": symbol = "\u{f02d}"
-        case "night201": symbol = "\u{f02d}"
-        case "night202": symbol = "\u{f02d}"
-        case "night210": symbol = "\u{f025}"
-        case "night211": symbol = "\u{f025}"
-        case "night212": symbol = "\u{f025}"
-        case "night221": symbol = "\u{f025}"
-        case "night230": symbol = "\u{f02d}"
-        case "night231": symbol = "\u{f02d}"
-        case "night232": symbol = "\u{f02d}"
-        case "night300": symbol = "\u{f02b}"
-        case "night301": symbol = "\u{f02b}"
-        case "night302": symbol = "\u{f028}"
-        case "night310": symbol = "\u{f028}"
-        case "night311": symbol = "\u{f028}"
-        case "night312": symbol = "\u{f028}"
-        case "night313": symbol = "\u{f028}"
-        case "night314": symbol = "\u{f028}"
-        case "night321": symbol = "\u{f02b}"
-        case "night500": symbol = "\u{f02b}"
-        case "night501": symbol = "\u{f028}"
-        case "night502": symbol = "\u{f028}"
-        case "night503": symbol = "\u{f028}"
-        case "night504": symbol = "\u{f028}"
-        case "night511": symbol = "\u{f026}"
-        case "night520": symbol = "\u{f029}"
-        case "night521": symbol = "\u{f029}"
-        case "night522": symbol = "\u{f029}"
-        case "night531": symbol = "\u{f02c}"
-        case "night600": symbol = "\u{f02a}"
-        case "night601": symbol = "\u{f0b4}"
-        case "night602": symbol = "\u{f02a}"
-        case "night611": symbol = "\u{f026}"
-        case "night612": symbol = "\u{f026}"
-        case "night615": symbol = "\u{f026}"
-        case "night616": symbol = "\u{f026}"
-        case "night620": symbol = "\u{f026}"
-        case "night621": symbol = "\u{f02a}"
-        case "night622": symbol = "\u{f02a}"
-        case "night701": symbol = "\u{f029}"
-        case "night711": symbol = "\u{f062}"
-        case "night721": symbol = "\u{f0b6}"
-        case "night731": symbol = "\u{f063}"
-        case "night741": symbol = "\u{f04a}"
-        case "night761": symbol = "\u{f063}"
-        case "night762": symbol = "\u{f063}"
-        case "night781": symbol = "\u{f056}"
-        case "night800": symbol = "\u{f02e}"
-        case "night801": symbol = "\u{f022}"
-        case "night802": symbol = "\u{f022}"
-        case "night803": symbol = "\u{f022}"
-        case "night804": symbol = "\u{f086}"
-        case "night900": symbol = "\u{f056}"
-        case "night902": symbol = "\u{f073}"
-        case "night903": symbol = "\u{f076}"
-        case "night904": symbol = "\u{f072}"
-        case "night906": symbol = "\u{f024}"
-        default: symbol = "\u{f050}"
-        */
+        }
+        return symbol
+    }
+}
+
+struct ApixuIcon {
+    static func convert(condition: Int) ->String {
+        let symbol: String
+        
+        switch condition {
+        // Sunny
+        case 1000 : symbol = "\u{f00d}"
+
+        // Cloudy
+            // Partly Cloudy
+        case 1003 : symbol = "\u{f041}"
+            // Cloudy
+        case 1006 : symbol = "\u{f041}"
+            // Overcast
+        case 1009 : symbol = "\u{f041}"
+        // Fog
+            // Mist
+        case 1030 : symbol = "\u{f014}"
+            // Fog
+        case 1135 : symbol = "\u{f014}"
+            // Freezing fog
+        case 1147 : symbol = "\u{f014}"
+        
+        // Light Rain
+            // Patchy rain nearby
+        case 1063 : symbol = "\u{f01c}"
+            // Patchy light drizzle
+        case 1150 : symbol = "\u{f01c}"
+            // Light drizzle
+        case 1153 : symbol = "\u{f01c}"
+            // Patchy light rain
+        case 1180 : symbol = "\u{f01c}"
+            // Light rain
+        case 1183 : symbol = "\u{f01c}"
+            // Light rain shower
+        case 1240 : symbol = "\u{f01c}"
+        
+        // Storm showers
+            //Moderate or heavy rain shower
+        case 1243 : symbol = "\u{f01d}"
+            // Patchy light rain in area with thunder
+        case 1273 : symbol = "\u{f01d}"
+        
+        // Thunderstorm
+            // Thundery outbreaks in nearby
+        case 1087 : symbol = "\u{f01e}"
+            // Heavy rain at times
+        case 1192 : symbol = "\u{f01e}"
+            // Heavy rain
+        case 1195 : symbol = "\u{f01e}"
+            // Torrential rain shower
+        case 1246 : symbol = "\u{f01e}"
+            // Moderate or heavy rain in area with thunder
+        case 1276 : symbol = "\u{f01e}"
+        
+        // Snow
+            // Patchy snow nearby
+        case 1066 : symbol = "\u{f01b}"
+            // Patchy sleet nearby
+        case 1069 : symbol = "\u{f01b}"
+            // Patchy freezing drizzle nearby
+        case 1072 : symbol = "\u{f01b}"
+            // Blowing snow
+        case 1114  : symbol = "\u{f01b}"
+            // Blizzard
+        case 1117 : symbol = "\u{f01b}"
+            // Patchy light snow in area with thunder
+        case 1279 : symbol = "\u{f01b}"
+            // Moderate or heavy snow in area with thunder
+        case 1282 : symbol = "\u{f01b}"
+            // Freezing drizzle
+        case 1168 : symbol = "\u{f01b}"
+            // Heavy freezing drizzle
+        case 1171 : symbol = "\u{f01b}"
+            // Light freezing rain
+        case 1198 : symbol = "\u{f01b}"
+            // Moderate or heavy freezing rain
+        case 1201 : symbol = "\u{f01b}"
+            // Light sleet
+        case 1204 : symbol = "\u{f01b}"
+            // Moderate or heavy sleet
+        case 1207 : symbol = "\u{f01b}"
+            // Patchy light snow
+        case 1210 : symbol = "\u{f01b}"
+            // Light snow
+        case 1213 : symbol = "\u{f01b}"
+            // Patchy moderate snow
+        case 1216 : symbol = "\u{f01b}"
+            // Moderate snow
+        case 1219 : symbol = "\u{f01b}"
+            // Patchy heavy snow
+        case 1222 : symbol = "\u{f01b}"
+            // Heavy snow
+        case 1225 : symbol = "\u{f01b}"
+            // Ice pellets
+        case 1237 : symbol = "\u{f01b}"
+            // Light sleet showers
+        case 1249 : symbol = "\u{f01b}"
+            // Moderate or heavy sleet showers
+        case 1252 : symbol = "\u{f01b}"
+            //Light snow showers
+        case 1255 : symbol = "\u{f01b}"
+            // Moderate or heavy snow showers
+        case 1258 : symbol = "\u{f01b}"
+            // Light showers of ice pellets
+        case 1261 : symbol = "\u{f01b}"
+            //Moderate or heavy showers of ice pellets
+        case 1264 : symbol = "\u{f01b}"
+        
+        // N/A
+        default : symbol = "\u{f07b}"
         }
         return symbol
     }
