@@ -31,7 +31,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     @IBOutlet weak var unit1: NSTableColumn!
     
     var forecastData = Forecast()
-      
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
