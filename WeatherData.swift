@@ -153,6 +153,7 @@ struct Forecast {
         else{
             endingPoint = 23
         }
+        
         for index in hour ... endingPoint{
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
             let date = formatter.date(from: data["forecast"]["forecastday"][0]["hour"][index]["time"].string!)
@@ -160,24 +161,18 @@ struct Forecast {
             timeUnits.append(formatter.string(from: date!))
             temperature.append("\(data["forecast"]["forecastday"][0]["hour"][index]["temp_f"].double!)°")
             let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][0]["hour"][index]["condition"]["code"].int!))
-            print(data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"])
-            print(symbol)
             conditions.append(symbol)
         }
         
         if(hour+numForecasts-1 > 23){
             endingPoint = hour + numForecasts - 1 - 24
             for index in 0 ... endingPoint{
-                print("time: ", index)
                 formatter.dateFormat = "yyyy-MM-dd HH:mm"
                 let date = formatter.date(from: data["forecast"]["forecastday"][1]["hour"][index]["time"].string!)
                 formatter.dateFormat = "hh:mm a"
                 timeUnits.append(formatter.string(from: date!))
                 temperature.append("\(data["forecast"]["forecastday"][1]["hour"][index]["temp_f"].double!)°")
                 let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"].int!))
-                print(data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"])
-                print(symbol)
-                
                 conditions.append(symbol)
             }
 

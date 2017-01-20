@@ -691,10 +691,10 @@
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="14" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ht-hJ-R3u">
                                 <rect key="frame" x="80" y="69" width="340" height="237"/>
                                 <subviews>
-                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" ambiguous="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VEV-uZ-X38">
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GYf-hd-KIK">
                                         <rect key="frame" x="90.5" y="201" width="159" height="36"/>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TH8-cE-Wjd">
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TH8-cE-Wjd">
                                                 <rect key="frame" x="-2" y="0.0" width="163" height="36"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="Chicago, IL" placeholderString="Chicago, IL" id="9RW-Eg-QBD">
                                                     <font key="font" metaFont="systemBold" size="30"/>
@@ -703,6 +703,9 @@
                                                 </textFieldCell>
                                             </textField>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="159" id="UT9-aR-7Yj"/>
+                                        </constraints>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                         </visibilityPriorities>
@@ -722,7 +725,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8g2-UX-Nzf">
-                                                <rect key="frame" x="77" y="0.0" width="159" height="22"/>
+                                                <rect key="frame" x="70" y="0.0" width="173" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="aOR-WP-Zjo"/>
                                                 </constraints>
@@ -912,6 +915,9 @@
                                     </scrollView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="GYf-hd-KIK" firstAttribute="centerX" secondItem="1ht-hJ-R3u" secondAttribute="centerX" id="PJF-og-loX"/>
+                                    <constraint firstItem="GYf-hd-KIK" firstAttribute="top" secondItem="1ht-hJ-R3u" secondAttribute="top" id="jOK-bL-P36"/>
+                                    <constraint firstItem="GYf-hd-KIK" firstAttribute="centerX" secondItem="1ht-hJ-R3u" secondAttribute="centerX" id="wae-si-oaM"/>
                                     <constraint firstAttribute="width" constant="340" id="wbd-4R-Qd7"/>
                                 </constraints>
                                 <visibilityPriorities>

@@ -17,7 +17,7 @@ struct OpenWeatherMapIcon {
         // Thunderstorms
         case 2 : symbol = "\u{f01e}"
         // Drizzle
-        case 3 : symbol = "\u{f01c}"
+        case 3 : symbol = "\u{f019}"
         // Rain
         case 5 : symbol = "\u{f019}"
         // Snow
@@ -115,23 +115,25 @@ struct ApixuIcon {
         
         // Light Rain
             // Patchy rain nearby
-        case 1063 : symbol = "\u{f01c}"
+        case 1063 : symbol = "\u{f019}"
             // Patchy light drizzle
-        case 1150 : symbol = "\u{f01c}"
+        case 1150 : symbol = "\u{f019}"
             // Light drizzle
-        case 1153 : symbol = "\u{f01c}"
+        case 1153 : symbol = "\u{f019}"
             // Patchy light rain
-        case 1180 : symbol = "\u{f01c}"
+        case 1180 : symbol = "\u{f019}"
             // Light rain
-        case 1183 : symbol = "\u{f01c}"
+        case 1183 : symbol = "\u{f019}"
+            // Moderate rain
+        case 1189 : symbol = "\u{f019}"
             // Light rain shower
-        case 1240 : symbol = "\u{f01c}"
+        case 1240 : symbol = "\u{f019}"
         
         // Storm showers
             //Moderate or heavy rain shower
-        case 1243 : symbol = "\u{f01d}"
+        case 1243 : symbol = "\u{f01e}"
             // Patchy light rain in area with thunder
-        case 1273 : symbol = "\u{f01d}"
+        case 1273 : symbol = "\u{f01e}"
         
         // Thunderstorm
             // Thundery outbreaks in nearby

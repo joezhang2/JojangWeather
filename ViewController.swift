@@ -11,9 +11,6 @@ import CoreLocation
 
 class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDelegate, NSTableViewDataSource{
     
-    var statusBar = NSStatusBar.system()
-    var statusBarItem : NSStatusItem = NSStatusItem()
-    
     var requestLocationServicesAlert = NSAlert()
     lazy var geocoder = CLGeocoder()
     var locationManager = CLLocationManager()
@@ -31,18 +28,10 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var dataTable: NSScrollView!
     @IBOutlet weak var headerView: NSTableHeaderView!
-    
-    
     @IBOutlet weak var unit1: NSTableColumn!
     
     var forecastData = Forecast()
-
-    override func awakeFromNib() {
-        //Add statusBarItem
-        statusBarItem = statusBar.statusItem(withLength: -1)
-        statusBarItem.title = "n/a"
-    }
-    
+      
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,7 +61,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             displayErrorMessage(title: title, message: message)
         }
         else{
-            print("ay daily")
             do{
                 try forecastData.updateForecast(curLocation: currentLocation, cityName: cityLabel.stringValue.components(separatedBy: ",")[0], daily: true)
             }
@@ -81,7 +69,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
                 let message = "Something went wrong :("
                 displayErrorMessage(title: title, message: message)
             }
-            print("lmao")
             tableView.reloadData()
         }
         semaphore.signal()
@@ -95,7 +82,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             displayErrorMessage(title: title, message: message)
         }
         else{
-            print("ay hourly")
             do{
                 try forecastData.updateForecast(curLocation: currentLocation, cityName: cityLabel.stringValue.components(separatedBy: ",")[0])
             }
@@ -104,7 +90,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
                 let message = "Something went wrong :("
                 displayErrorMessage(title: title, message: message)
             }
-            print("lmao")
             tableView.reloadData()
         }
         semaphore.signal()
@@ -185,7 +170,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             // Process Response
             self.processResponse(withPlacemarks: placemarks, error: error)
-            print(self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude)
+            //print(self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude)
         }
 
         semaphore.signal()
