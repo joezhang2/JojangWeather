@@ -944,7 +944,6 @@
                     <connections>
                         <outlet property="cityLabel" destination="TH8-cE-Wjd" id="lA2-fT-QUG"/>
                         <outlet property="cityTextField" destination="8g2-UX-Nzf" id="r89-Ei-Jj5"/>
-                        <outlet property="dataTable" destination="Y5W-MY-u3u" id="rGP-Gi-Ttb"/>
                         <outlet property="tableView" destination="yoq-qP-7cE" id="9uS-Hg-G1V"/>
                     </connections>
                 </viewController>

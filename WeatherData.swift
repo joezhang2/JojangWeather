@@ -35,15 +35,20 @@ struct Forecast {
         fiveTimeUnitsForecast = [Weather](repeating: Weather(weatherCondition: "Null", temperature: "0.0°", time: "Null day"), count: numForecasts )
     }
     
+    // Overwrites the array of Weather structs with data from the arrays
+    //  To do: Check that the array sizes match? Or is it safe to assume the user will do that?
     mutating func setForecast(conditions: [String], temperature: [String], timeUnits: [String]) {
         fiveTimeUnitsForecast.removeAll()
+        
         var day: Weather = Weather(weatherCondition: "null", temperature: "0.0°", time: "null")
+        
         for index in 0 ... numForecasts-1{
             day = Weather(weatherCondition: conditions[index], temperature: temperature[index], time: timeUnits[index])
             fiveTimeUnitsForecast.append(day)
         }
     }
     
+    // Update weather data using the corresponding API
     mutating func updateForecast(curLocation: CLLocation, cityName: String, daily:Bool = false) throws {
         let jsonData: JSON!
         let cond: [String]
@@ -66,6 +71,8 @@ struct Forecast {
         }
     }
     
+    
+    // Get weather data from API
     func retrieveData(curLocation: CLLocation, cityName: String, daily:Bool = false)throws->JSON{
         var urlString: String
         var json: JSON!
@@ -91,17 +98,18 @@ struct Forecast {
         }
     }
     
+    // Parse the daily weather json and arrays of weather data
     func parseDailyData(data: JSON) ->([String], [String], [String]){
         var conditions = [String]()
         var temperature = [String]()
         var timeUnits = [String]()
         
         for index in 0 ... numForecasts-1{
-            
+            // Convert date from yyyy-MM-dd to day of week
             let date = NSDate(timeIntervalSince1970: data["list"][index]["dt"].double!)
             let formatter  = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            //guard let curDate = formatter.date(from: date) else { return nil }
+            
             let myCalendar = Calendar(identifier: .gregorian)
             let weekDay = myCalendar.component(.weekday, from: date as Date)
             let dayOfweek: String
@@ -125,11 +133,11 @@ struct Forecast {
             
             timeUnits.append(dayOfweek)
             
+            // Save the forecasted temperature
             temperature.append("\(data["list"][index]["temp"]["day"].double!)°")
             
+            // Convert the weather condition into the corresponding weather icon
             let symbol = OpenWeatherMapIcon.convert(condition: (data["list"][index]["weather"][0]["id"].int!))
-            //print(data["list"][index]["weather"][0]["main"].string)
-            //print(symbol)
             conditions.append(symbol)
         }
         
@@ -144,6 +152,9 @@ struct Forecast {
         formatter.amSymbol = "AM"
         formatter.pmSymbol = "PM"
         
+        // Check if data from tomorrow is needed
+        //  Forecasted data is returned in arrays of 24 forecasts per day. So if
+        //  the current time is 10 pm, data for tomorrow would be needed as well.
         let hour = Calendar.current.component(.hour, from: Date())
         var endingPoint = 0
         
@@ -154,28 +165,39 @@ struct Forecast {
             endingPoint = 23
         }
         
+        // Get data for today
         for index in hour ... endingPoint{
+            // Convert the time into the hour
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
             let date = formatter.date(from: data["forecast"]["forecastday"][0]["hour"][index]["time"].string!)
             formatter.dateFormat = "hh:mm a"
             timeUnits.append(formatter.string(from: date!))
+            
+            // Save the forecasted temperature
             temperature.append("\(data["forecast"]["forecastday"][0]["hour"][index]["temp_f"].double!)°")
+            
+            // Convert the weather condition into the corresponding weather icon
             let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][0]["hour"][index]["condition"]["code"].int!))
             conditions.append(symbol)
         }
         
+        // Get data for tomorrow if needed
         if(hour+numForecasts-1 > 23){
             endingPoint = hour + numForecasts - 1 - 24
             for index in 0 ... endingPoint{
+                // Convert the time into the hour
                 formatter.dateFormat = "yyyy-MM-dd HH:mm"
                 let date = formatter.date(from: data["forecast"]["forecastday"][1]["hour"][index]["time"].string!)
                 formatter.dateFormat = "hh:mm a"
                 timeUnits.append(formatter.string(from: date!))
+                
+                // Save the forecasted temperature
                 temperature.append("\(data["forecast"]["forecastday"][1]["hour"][index]["temp_f"].double!)°")
+                
+                // Convert the weather condition into the corresponding weather icon
                 let symbol = ApixuIcon.convert(condition: (data["forecast"]["forecastday"][1]["hour"][index]["condition"]["code"].int!))
                 conditions.append(symbol)
             }
-
         }
         
         return (conditions, temperature, timeUnits)

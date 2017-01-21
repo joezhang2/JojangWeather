@@ -26,15 +26,14 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     @IBOutlet weak var cityTextField: NSTextField!
     @IBOutlet weak var cityLabel: NSTextField!
     @IBOutlet weak var tableView: NSTableView!
-    @IBOutlet weak var dataTable: NSScrollView!
-    @IBOutlet weak var headerView: NSTableHeaderView!
-    @IBOutlet weak var unit1: NSTableColumn!
     
     var forecastData = Forecast()
         
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Prompt user for location services during the first time app is used. If denied
+        //  the user will have to change the permissions on their own.
         if (CLLocationManager.locationServicesEnabled()){
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -42,18 +41,22 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             locationManager.startUpdatingLocation()
             locationManager.stopUpdatingLocation()
         }
+        
+        // Determine the user's location automatically
         userSetLocation(self)
         
+        // Initialize table with dummy data
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.allowsColumnSelection = false
         tableView.selectionHighlightStyle = NSTableViewSelectionHighlightStyle.none
         self.tableView.reloadData()
-        
     }
     
     @IBAction func updateDailyForecast(_ sender: Any) {
+        // Use semaphore as data may not come immediately to prevent the user from
+        //  updating the hourly forecast before the daily forecast has finished
         semaphore.wait()
         if !cityFound{
             let title = "Missing location data"
@@ -75,6 +78,8 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
     }
     
     @IBAction func updateHourlyForecast(_ sender: Any) {
+        // Use semaphore as data may not come immediately to prevent the user from
+        //  updating the daily forecast before the hourly forecast has finished
         semaphore.wait()
         if !cityFound{
             let title = "Missing location data"
@@ -96,10 +101,12 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         
     }
     
-    
-    // Tries to use location services to retrieve the latitue and longitude of the current position
+    // Use location services to retrieve geographic coordinates and city and state of
+    //  current location
     @IBAction func autoSetLocation(_ sender: Any) {
         // Check if user granted allowed access
+        
+        // lookUpCityAndState runs asynchronously, so need to wait for it to finish
         semaphore.wait()
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorized){
             // Update get user's location
@@ -108,7 +115,6 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
             currentLocation = locationManager.location
             
             lookUpCityAndState(location: currentLocation)
-            //print(currentLocation.coordinate.longitude, currentLocation.coordinate.latitude)
         }
         else{
             let title = "Need location services"
@@ -118,7 +124,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         semaphore.signal()
     }
     
-    
+    // User the macOS geocoder to get the city and state using the location manager
     func lookUpCityAndState(location: CLLocation){
         CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
             if error != nil {
@@ -141,8 +147,9 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         })
     }
     
-    
+    // Helper function to display an error message
     func displayErrorMessage(title: String, message: String){
+        // Sets the city found flag to false
         cityFound = false
         
         requestLocationServicesAlert.messageText = title
@@ -150,7 +157,9 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         requestLocationServicesAlert.runModal()
     }
     
+    // Take data the user entered to get geographic coordinates for the weather
     @IBAction func userSetLocation(_ sender: AnyObject) {
+        // lookUpCityAndState runs asynchronously, so need to wait for it to finish
         semaphore.wait()
         cityLabel.stringValue = cityTextField.stringValue
         let locationData = cityTextField.stringValue.components(separatedBy: ",")
@@ -176,7 +185,7 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         semaphore.signal()
     }
     
-    
+    // Helper function for the reverse geocode lookup
     private func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
         if (error != nil) {
             //print("Unable to Forward Geocode Address (\(error))")
@@ -202,40 +211,26 @@ class ViewController: NSViewController, CLLocationManagerDelegate, NSTableViewDe
         return numberRows
     }
     
-   
+    // Load table with data
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         var text = ""
         
         for index in 0 ... tableView.tableColumns.count-1{
             if tableColumn == tableView.tableColumns[index]{
+                // Row for the time: hourly or daily
                 if row == 0{
                     text = forecastData.fiveTimeUnitsForecast[index].time
                 }
+                // Row for the forecasted temperature
                 else if row == 1{
                     text = forecastData.fiveTimeUnitsForecast[index].temperature
                 }
+                // Row for the weather condition
                 else{
-                    //view.textField?.font = NSFont(name: "Weather Icons", size: 16)
-                    //view.textField?.stringValue = forecastData.fiveTimeUnitsForecast[index].weatherCondition
-                    //return view
-                    //cityLabel?.font = NSFont(name: "Weather Icons", size: 16)
-                    //cityLabel.stringValue = "strong-wind" //"\u{f029}"
                     text = forecastData.fiveTimeUnitsForecast[index].weatherCondition
-
                 }
             }
         }
         return text
     }
-    
-    
-    override var representedObject: Any? {
-        didSet {
-            // Update the view, if already loaded.
-        }
-    }
-    
-    
-    // Status bar
-    
 }
