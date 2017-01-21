@@ -7,8 +7,8 @@ Weather data is provided for free from <a href="https://openweathermap.org/">Ope
 forecasts and <a href="https://www.apixu.com/">Apixu</a> for hourly forecasts. The weather icons are made by 
 <a href="https://erikflowers.github.io/weather-icons/">Erik Flowers</a>.
 
-Potential things in the works/if I think the features are worth the work:
 <ul>
+Potential things in the works/if I think the features are worth the work:
 <li>Hovering over a weather condition provides a detailed description</li>
 <li>Highs and lows for forecasted temperature</li>
 <li>Enabling app to live in the menubar</li>
