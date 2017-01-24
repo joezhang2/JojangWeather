@@ -1,9 +1,11 @@
 # JojangWeather
 
 Simple app for macos that displays a 5 day or 5 hour forecast for a city.
-Daily:
-<img src="https://github.com/joezhang2/JojangWeather/blob/master/DailyScreenShot.jpg" width="500" height="366"/>
-Hourly:
+
+<p>Daily:</p>
+<img src="https://github.com/joezhang2/JojangWeather/blob/master/DailyScreenShot.jpg" width="500" height="366" alt/>
+
+<p>Hourly:</p>
 <img src="https://github.com/joezhang2/JojangWeather/blob/master/HourlyScreenShot.jpg" width="500" height="366"/>
 
 Weather data is provided for free from <a href="https://openweathermap.org/">OpenWeatherMap</a> for daily
